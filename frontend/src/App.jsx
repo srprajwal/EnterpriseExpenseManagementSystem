@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// import { useState } from 'react'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
+import Button from '@mui/material/Button';
 
 // function App() {
 //   const [count, setCount] = useState(0)
@@ -34,9 +35,7 @@ import './App.css'
 
 function App() {
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">Hello, World!</h1>
-    </div>
+    <Button variant="contained">Hello world</Button>
   );
 }
 
