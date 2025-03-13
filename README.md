@@ -21,12 +21,10 @@ Run the following command to install the required dependencies:
 ```sh
 npm install
 ```
-
-If you face issues with Tailwind CSS or PostCSS, install them manually:
+Run the below command to install Tailwind CSS :
 
 ```sh
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
+npm install tailwindcss @tailwindcss/vite
 ```
 
 ## Running the Development Server
