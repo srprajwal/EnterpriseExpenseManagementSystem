@@ -22,11 +22,6 @@ Run the following command to install the required dependencies:
 npm install
 ```
 
-Run the below command to install Material UI :
-```sh
-npm install @mui/material @emotion/react @emotion/styled
-```
-
 ## Running the Development Server
 
 Start the React application using:
