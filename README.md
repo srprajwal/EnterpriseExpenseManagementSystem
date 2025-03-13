@@ -26,6 +26,12 @@ Run the below command to install Tailwind CSS :
 ```sh
 npm install tailwindcss @tailwindcss/vite
 ```
+Run the below command to install Material UI :
+
+```sh
+npm install @mui/material @emotion/react @emotion/styled
+```
+
 
 Run the below command to install Material UI :
 ```sh
