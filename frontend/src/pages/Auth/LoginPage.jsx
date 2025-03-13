@@ -22,12 +22,12 @@ const LoginPage = () => {
           <Box sx={{ mt: 2 }}>
             <Typography variant="body2" align="center">
               Don't have an account?{' '}
-              <Link to="/register" variant="body2">
+              <Link to="/register" className="text-blue-500 hover:underline" variant="body2">
                 Register
               </Link>
             </Typography>
             <Typography variant="body2" align="center" sx={{ mt: 1 }}>
-              <Link to="/forgot-password" variant="body2">
+              <Link to="/forgot-password" variant="body2" className="text-blue-500 hover:underline">
                 Forgot password?
               </Link>
             </Typography>
