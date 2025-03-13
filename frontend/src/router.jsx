@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/common/Login";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 
 // import Register from "./pages/common/Register";
 // import ForgotPassword from "./pages/common/ForgotPassword";
@@ -27,6 +28,7 @@ function AppRouter() {
         {/* Default route redirects to /login */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
