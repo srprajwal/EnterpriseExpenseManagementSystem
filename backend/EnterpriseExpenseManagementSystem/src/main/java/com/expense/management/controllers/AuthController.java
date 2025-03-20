@@ -1,7 +1,11 @@
 package com.expense.management.controllers;
 
+
+
 import com.expense.management.dto.RegisterRequest;
 import com.expense.management.dto.MessageResponse;
+import com.expense.management.dto.LoginRequest; // Import LoginRequest
+import com.expense.management.dto.AuthResponse;  // Import AuthResponse
 import com.expense.management.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +27,11 @@ public class AuthController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        AuthResponse authResponse = authService.authenticateUser(loginRequest);
+        return ResponseEntity.ok(authResponse);
     }
 }
