@@ -10,12 +10,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.core.userdetails.UserDetailsService; // Import UserDetailsService
-import com.expense.management.services.UserDetailsServiceImpl; // Import your UserDetailsServiceImpl
+import org.springframework.security.core.userdetails.UserDetailsService;
+import com.expense.management.services.UserDetailsServiceImpl;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final UserDetailsServiceImpl userDetailsService;
+
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -30,7 +37,7 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -38,18 +45,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
+            .csrf(csrf -> csrf.disable())  // Disable CSRF for APIs
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless authentication
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/**").permitAll() // Public authentication endpoints
+                .requestMatchers("/api/expenses/**").hasAuthority("EMPLOYEE") // Only EMPLOYEEs can access expense APIs
+                .requestMatchers("/api/reports/**").hasAnyAuthority("MANAGER", "FINANCE_OFFICER") // MANAGER & FINANCE_OFFICER can access reports
+                .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Only ADMINs can access admin APIs
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider());
 
         return http.build();
-    }
-
-     @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl(); // Use your UserDetailsServiceImpl here
     }
 }
