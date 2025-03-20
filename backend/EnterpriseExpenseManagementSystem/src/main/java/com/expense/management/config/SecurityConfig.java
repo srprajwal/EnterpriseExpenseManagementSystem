@@ -10,15 +10,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.core.userdetails.UserDetailsService;
+
 import com.expense.management.services.UserDetailsServiceImpl;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
+import com.expense.management.security.CustomAuthenticationEntryPoint;
+import org.springframework.beans.factory.annotation.Autowired; // Add this import
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -42,19 +47,23 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())  // Disable CSRF for APIs
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless authentication
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/**").permitAll() // Public authentication endpoints
-                .requestMatchers("/api/expenses/**").hasAuthority("EMPLOYEE") // Only EMPLOYEEs can access expense APIs
-                .requestMatchers("/api/reports/**").hasAnyAuthority("MANAGER", "FINANCE_OFFICER") // MANAGER & FINANCE_OFFICER can access reports
-                .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Only ADMINs can access admin APIs
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/expenses/**").hasAuthority("EMPLOYEE")
+                .requestMatchers("/api/reports/**").hasAnyAuthority("MANAGER", "FINANCE_OFFICER")
+                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )
-            .authenticationProvider(authenticationProvider());
+            .authenticationProvider(authenticationProvider())
+            .exceptionHandling(exceptionHandling -> 
+                exceptionHandling.authenticationEntryPoint(authenticationEntryPoint)
+            );
 
         return http.build();
     }
