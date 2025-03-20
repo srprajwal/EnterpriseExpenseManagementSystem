@@ -1,20 +1,41 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import axios from 'axios';
+import { TextField, Button, Box, Alert, CircularProgress } from '@mui/material';
+import { useAuth } from '../../context/AuthContext';
+
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    //   Add your login logic here
-    //   - Call the authService to make an API request
-    //   - Handle success/error scenarios (e.g., redirect, show messages)
-    console.log('Logging in with:', { email, password });
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/login', {
+        email,
+        password,
+      });
+
+      const { token, role } = response.data;
+
+      login(token, role);
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setError(error.response?.data?.message || 'Login failed');
+    }
   };
 
   return (
     <form onSubmit={handleLogin}>
+      {error && <Alert severity="error">{error}</Alert>}
       <TextField
         label="Email"
         type="email"
@@ -41,8 +62,9 @@ const LoginForm = () => {
         variant="contained"
         color="primary"
         sx={{ mt: 3, mb: 2 }}
+        disabled={loading}
       >
-        Login
+        {loading ? <CircularProgress size={24} /> : 'Login'}
       </Button>
     </form>
   );
