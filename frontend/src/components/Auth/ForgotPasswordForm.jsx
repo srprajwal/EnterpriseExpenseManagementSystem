@@ -1,45 +1,53 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { Alert } from '@mui/material';
+import axios from 'axios';
+import { TextField, Button, Alert, CircularProgress } from '@mui/material';
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleForgotPassword = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //   Simulate success for now
-    setMessage('A password reset link has been sent to your email.');
+    setMessage('');
     setError('');
+    setLoading(true);
 
-    //   In a real implementation, you would:
-    //   - Call your backend API to send the reset link
-    //   - Handle success/error responses
+    try {
+      await axios.post('http://localhost:8080/api/auth/forgot-password', { email });
+      setMessage('Password reset link sent to your email.');
+      setEmail(''); // Clear the email field
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to send reset link. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form onSubmit={handleForgotPassword}>
-      {message && <Alert severity="success">{message}</Alert>}
-      {error && <Alert severity="error">{error}</Alert>}
+    <form onSubmit={handleSubmit}>
+      {message && <Alert severity="success" className="mb-2">{message}</Alert>}
+      {error && <Alert severity="error" className="mb-2">{error}</Alert>}
       <TextField
-        label="Email Address"
+        label="Email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        required
         fullWidth
         margin="normal"
-        required
+        disabled={loading}
       />
       <Button
         type="submit"
+        fullWidth
         variant="contained"
         color="primary"
-        fullWidth
         className="mt-4"
+        disabled={loading}
       >
-        Send Reset Link
+        {loading ? <CircularProgress size={24} /> : 'Send Reset Link'}
       </Button>
     </form>
   );
