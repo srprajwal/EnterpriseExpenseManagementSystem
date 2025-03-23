@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Alert, CircularProgress, Box } from '@mui/material';
+import authService from '../../services/authService'; // Import authService
 
 const ResetPasswordForm = ({ token }) => {
   const [password, setPassword] = useState('');
@@ -9,7 +9,6 @@ const ResetPasswordForm = ({ token }) => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  // const { token } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +30,7 @@ const ResetPasswordForm = ({ token }) => {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/auth/reset-password', { token, newPassword: password });
+      await authService.resetPassword(token, password);
       setMessage('Password reset successfully. Redirecting to login...');
       setTimeout(() => {
         navigate('/login');

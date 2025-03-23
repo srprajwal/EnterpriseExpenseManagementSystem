@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+
 import { TextField, Button, Alert, CircularProgress } from '@mui/material';
+import authService from '../../services/authService'; // Import authService
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const ForgotPasswordForm = () => {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:8080/api/auth/forgot-password', { email });
+      await authService.forgotPassword(email);
       setMessage('Password reset link sent to your email.');
       setEmail(''); // Clear the email field
     } catch (error) {

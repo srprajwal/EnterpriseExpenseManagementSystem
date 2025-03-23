@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { TextField, Button, Box, Alert, CircularProgress } from '@mui/material';
+import { TextField, Button, Alert, CircularProgress } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
-
+import authService from '../../services/authService'; // Import authService
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -17,19 +16,12 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
-        email,
-        password,
-      });
-
-      const { token, role } = response.data;
-
+      const { token, role } = await authService.login(email, password);
       login(token, role);
-
-      setLoading(false);
     } catch (error) {
+      setError(error.message || 'Login failed');
+    } finally {
       setLoading(false);
-      setError(error.response?.data?.message || 'Login failed');
     }
   };
 

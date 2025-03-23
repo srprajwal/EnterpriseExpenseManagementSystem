@@ -1,23 +1,32 @@
-// //   services/authService.js
-// import axios from 'axios';
+import axios from "axios";
 
-// const API_URL = 'your_backend_api_url'; // Replace with your actual API URL
+const API_URL = "http://localhost:8080/api/auth/"; // Backend API base URL for authentication
 
-// const login = async (email, password) => {
-//   try {
-//     const response = await axios.post(`${API_URL}/auth/login`, {
-//       email,
-//       password,
-//     });
-//     return response.data; // Or handle as needed
-//   } catch (error) {
-//     throw error.response.data; // Or handle the error format from your API
-//   }
-// };
+const register = (name, email, password, role) =>
+  axios
+    .post(API_URL + "register", { name, email, password, role })
+    .then((response) => response.data);
 
-// //   Other auth-related functions (register, forgot password, etc.) will go here
+const login = (email, password) =>
+  axios
+    .post(API_URL + "login", { email, password })
+    .then((response) => response.data);
 
-// export default {
-//   login,
-//   //   ...other functions
-// };
+const forgotPassword = (email) =>
+  axios
+    .post(API_URL + "forgot-password", { email })
+    .then((response) => response.data);
+
+const resetPassword = (token, newPassword) =>
+  axios
+    .post(API_URL + "reset-password", { token, newPassword })
+    .then((response) => response.data);
+
+const authService = {
+  register,
+  login,
+  forgotPassword,
+  resetPassword,
+};
+
+export default authService;

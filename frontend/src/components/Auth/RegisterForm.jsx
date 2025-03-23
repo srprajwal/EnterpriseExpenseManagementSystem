@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import authService from '../../services/authService';
 import {
   TextField,
   Button,
@@ -9,7 +9,6 @@ import {
   Select,
   MenuItem,
   Grid,
-  Typography,
   Alert,
   CircularProgress,
 } from '@mui/material'; // MUI components
@@ -18,18 +17,17 @@ const RegisterForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); // Added
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('employee');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // Added
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
-    setLoading(true); // Start loading
+    setError('');
+    setLoading(true);
 
-    // Basic client-side validation
     if (!name || !email || !password || !confirmPassword) {
       setError('All fields are required.');
       setLoading(false);
@@ -43,16 +41,9 @@ const RegisterForm = () => {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/auth/register', {
-        name,
-        email,
-        password,
-        role,
-      });
-
+      await authService.register(name, email, password, role);
       setLoading(false);
-      // Redirect to login after successful registration
-      navigate('/login');
+      navigate('/login'); // Redirect to login after success
     } catch (error) {
       setLoading(false);
       setError(error.response?.data?.message || 'Registration failed');
@@ -61,13 +52,12 @@ const RegisterForm = () => {
 
   return (
     <form onSubmit={handleRegister}>
-      {error && <Alert severity="error">{error}</Alert>} {/* Error display */}
+      {error && <Alert severity="error">{error}</Alert>}
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
             label="Name"
             type="text"
-            id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -79,7 +69,6 @@ const RegisterForm = () => {
           <TextField
             label="Email"
             type="email"
-            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -91,7 +80,6 @@ const RegisterForm = () => {
           <TextField
             label="Password"
             type="password"
-            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -103,7 +91,6 @@ const RegisterForm = () => {
           <TextField
             label="Confirm Password"
             type="password"
-            id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
@@ -113,28 +100,15 @@ const RegisterForm = () => {
         </Grid>
         <Grid item xs={12}>
           <FormControl fullWidth margin="normal">
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              labelId="role-label"
-              id="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              label="Role" // Label for the select
-            >
+            <InputLabel>Role</InputLabel>
+            <Select value={role} onChange={(e) => setRole(e.target.value)}>
               <MenuItem value="employee">Employee</MenuItem>
               <MenuItem value="manager">Manager</MenuItem>
-              {/* Admin role should typically be assigned through a separate process */}
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            disabled={loading} // Disable button while loading
-          >
+          <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
             {loading ? <CircularProgress size={24} /> : 'Register'}
           </Button>
         </Grid>
