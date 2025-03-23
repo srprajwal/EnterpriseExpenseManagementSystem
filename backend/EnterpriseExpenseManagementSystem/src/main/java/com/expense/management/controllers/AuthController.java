@@ -3,6 +3,7 @@ package com.expense.management.controllers;
 
 
 import com.expense.management.dto.RegisterRequest;
+import com.expense.management.dto.ResetPasswordRequest;
 import com.expense.management.dto.MessageResponse;
 import com.expense.management.dto.LoginRequest; // Import LoginRequest
 import com.expense.management.dto.AuthResponse;  // Import AuthResponse
@@ -50,6 +51,15 @@ public class AuthController {
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         forgotPasswordService.processForgotPassword(request.getEmail());
         return ResponseEntity.ok("Password reset link sent to your email.");
+    }
+    
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        if (forgotPasswordService.resetPassword(request.getToken(), request.getNewPassword())) {
+            return ResponseEntity.ok("Password reset successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to reset password.");
+        }
     }
     
 }

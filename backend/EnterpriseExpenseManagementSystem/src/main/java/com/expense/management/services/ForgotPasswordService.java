@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.expense.management.entities.User;
 import com.expense.management.repositories.UserRepository;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,6 +19,7 @@ public class ForgotPasswordService {
 
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${frontend.url}")
     private String frontendUrl;
@@ -24,9 +27,10 @@ public class ForgotPasswordService {
     @Value("${spring.mail.username}")
     private String mailUsername;
 
-    public ForgotPasswordService(UserRepository userRepository, JavaMailSender mailSender) {
+    public ForgotPasswordService(UserRepository userRepository, JavaMailSender mailSender, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -58,4 +62,29 @@ public class ForgotPasswordService {
 
         mailSender.send(message);
     }
+    
+    @Transactional
+    public boolean resetPassword(String token, String newPassword) {
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid reset token."));
+
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            user.setResetToken(null);
+            user.setResetTokenExpiry(null);
+            userRepository.save(user);
+            throw new RuntimeException("Reset token has expired.");
+        }
+
+        // Update password
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+
+        // Invalidate the token
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+
+        userRepository.save(user);
+        return true;
+    }
+    
 }
