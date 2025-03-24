@@ -1,10 +1,14 @@
 import React from "react";
+import Header from "../../pages/Layout/Header";
 
 const ManagerDashboard = () => {
+  const user = { name: "Jane Doe", profilePic: "/manager-pic.jpg" };
+
   return (
-    <div style={{ textAlign: "center", marginTop: "50px", fontSize: "24px" }}>
+    <>
+      <Header user={user} />
       <h1>Welcome to Manager Dashboard</h1>
-    </div>
+    </>
   );
 };
 

@@ -1,10 +1,14 @@
 import React from "react";
+import Header from "../../pages/Layout/Header";
 
 const EmployeeDashboard = () => {
+  const user = { name: "John Doe", profilePic: "/employee-pic.jpg" };
+
   return (
-    <div style={{ textAlign: "center", marginTop: "50px", fontSize: "24px" }}>
+    <>
+      <Header user={user} />
       <h1>Welcome to Employee Dashboard</h1>
-    </div>
+    </>
   );
 };
 
