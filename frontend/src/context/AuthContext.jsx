@@ -20,13 +20,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("jwt", token);
     localStorage.setItem("userRole", role);
     setAuth({ token, role });
-    navigate("/employee-dashboard");
+    // navigate("/employee-dashboard");
 
-    // if (role === "EMPLOYEE") {
-    //   navigate("/employee-dashboard");
-    // } else if (role === "MANAGER") {
-    //   navigate("/manager-dashboard");
-    // }
+    if (role === "EMPLOYEE") {
+      navigate("/employee-dashboard");
+    } else if (role === "MANAGER") {
+      navigate("/manager-dashboard");
+    }
 
   };
 

@@ -49,10 +49,20 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
-        // Assign default role (e.g., EMPLOYEE)
-        Role employeeRole = roleRepository.findByName("EMPLOYEE");
-        if (employeeRole != null) {
-            user.getRoles().add(employeeRole);
+        // Assign role based on the request
+        String requestedRoleName = registerRequest.getRole();
+        Role requestedRole = roleRepository.findByName(requestedRoleName);
+
+        if (requestedRole != null) {
+            user.getRoles().add(requestedRole);
+        } else {
+            // Handle case where the requested role doesn't exist
+            System.err.println("Requested role not found: " + requestedRoleName);
+            // Optionally, assign a default role here if needed
+            Role defaultRole = roleRepository.findByName("EMPLOYEE");
+            if (defaultRole != null) {
+                user.getRoles().add(defaultRole);
+            }
         }
 
         userRepository.save(user);
@@ -68,10 +78,11 @@ public class AuthServiceImpl implements AuthService {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String jwt = jwtUtils.generateToken((UserDetails) userDetails);
 
-
-        // Get user details (role) - Replace this with your actual logic to fetch user details
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElse(null);
-        String role = (user != null) ? user.getRoles().toString() : "UNKNOWN";
+        String role = "UNKNOWN";
+        if (user != null && !user.getRoles().isEmpty()) {
+            role = user.getRoles().iterator().next().getName(); // Get the name of the first role
+        }
 
         return new AuthResponse(jwt, role);
     }
