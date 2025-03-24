@@ -5,6 +5,8 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import SettingsIcon from "@mui/icons-material/Settings";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import HistoryIcon from '@mui/icons-material/History';
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -14,14 +16,25 @@ const Sidebar = () => {
   const { auth, logout } = useAuth();
   const userRole = auth.role; // EMPLOYEE or MANAGER
 
-  const menuItems = [
+  const employeeMenuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
-    { text: "My Expenses", icon: <ReceiptIcon />, path: "/expenses", roles: ["EMPLOYEE"] },
-    { text: "Expense Requests", icon: <ReceiptIcon />, path: "/expense-requests", roles: ["MANAGER"] },
-    { text: "Team Members", icon: <PeopleIcon />, path: "/team", roles: ["MANAGER"] },
-    { text: "Analytics", icon: <BarChartIcon />, path: "/analytics", roles: ["MANAGER"] },
-    { text: "Settings", icon: <SettingsIcon />, path: "/settings", roles: ["EMPLOYEE", "MANAGER"] },
+    { text: "My Expenses", icon: <ReceiptIcon />, path: "/expenses" },
+    { text: "Create Expense", icon: <AddCircleOutlineIcon />, path: "/create-expense" },
+    { text: "Expense History", icon: <HistoryIcon />, path: "/expense-history" },
+    { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
+
   ];
+
+  const managerMenuItems = [
+    { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
+    { text: "Expense Requests", icon: <ReceiptIcon />, path: "/expense-requests" },
+    { text: "Team Members", icon: <PeopleIcon />, path: "/team" },
+    { text: "Analytics", icon: <BarChartIcon />, path: "/analytics" },
+    { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
+  ];
+
+  const menuItems = userRole === "MANAGER" ? managerMenuItems : employeeMenuItems;
+
 
   return (
     <Drawer
