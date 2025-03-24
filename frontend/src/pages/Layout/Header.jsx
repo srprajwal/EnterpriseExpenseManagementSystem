@@ -3,12 +3,10 @@ import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Avatar, Badge 
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/Logo/logo_company.png";
-import { useAuth } from "../../context/AuthContext"; // Import the useAuth hook
 
 const Header = ({ user }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-  const { logout } = useAuth(); // Access the logout function from the context
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -18,12 +16,8 @@ const Header = ({ user }) => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    logout(); // Call the logout function from the AuthContext
-  };
-
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#967ebf" }}>
+    <AppBar position="fixed" sx={{ backgroundColor: "#967ebf" }}>
       <Toolbar>
         {/* Logo & Website Name */}
         <Typography variant="h6" sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
@@ -33,7 +27,7 @@ const Header = ({ user }) => {
 
         {/* Notification Icon */}
         <IconButton color="inherit">
-          <Badge badgeContent={4} color="error"> {/* Change "3" to dynamic count */}
+          <Badge badgeContent={4} color="error"> {/* Change "4" to dynamic count */}
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -43,10 +37,9 @@ const Header = ({ user }) => {
           <Avatar src={user?.profilePic || "/default-avatar.png"} />
         </IconButton>
 
-        {/* Profile Menu */}
+        {/* Profile Menu (Only Profile Option) */}
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
           <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
