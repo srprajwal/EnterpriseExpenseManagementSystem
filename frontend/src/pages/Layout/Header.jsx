@@ -39,7 +39,7 @@ const Header = ({ user }) => {
 
         {/* Profile Menu (Only Profile Option) */}
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-          <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
+          <MenuItem onClick={() => navigate("/settings")}>Profile</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

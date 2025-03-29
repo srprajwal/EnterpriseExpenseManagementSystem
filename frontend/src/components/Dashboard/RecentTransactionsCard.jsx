@@ -18,7 +18,7 @@ const RecentTransactionsCard = ({ recentTransactions }) => {
                 <Typography sx={{ ml: 0.5, color: 'textSecondary' }}>{transaction.date}</Typography>
               </Box>
               <Typography color={transaction.type === 'expense' ? 'error' : 'success'}>
-                {transaction.type === 'expense' ? `-$${transaction.amount.toFixed(2)}` : `+$${transaction.amount.toFixed(2)}`}
+                {transaction.type === 'expense' ? `-${transaction.amount}` : `+${transaction.amount}`}
               </Typography>
             </Box>
           ))

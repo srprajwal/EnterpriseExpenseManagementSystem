@@ -35,10 +35,10 @@ import { useAuth } from "../../context/AuthContext";
 
 const EmployeeDashboard = () => {
   const user = { name: "John Doe", profilePic: "/employee-pic.jpg" };
-  const [totalExpenses, setTotalExpenses] = useState(1500); // Mock data
-  const [monthlyBudget, setMonthlyBudget] = useState(2000); // Mock data
-  const [approvedHousing, setApprovedHousing] = useState(650); // Mock data
-  const [pendingApprovalsCount, setPendingApprovalsCount] = useState(2); // Mock data
+  const [totalExpenses, setTotalExpenses] = useState(15000); // Mock data
+  const [monthlyBudget, setMonthlyBudget] = useState(20000); // Mock data
+  const [approvedHousing, setApprovedHousing] = useState(6500); // Mock data
+  const [pendingApprovalsCount, setPendingApprovalsCount] = useState(4); // Mock data
   const [expenseOverviewData, setExpenseOverviewData] = useState([ // Mock data
     { month: 'Jan', expenses: 100 },
     { month: 'Feb', expenses: 200 },
@@ -47,9 +47,9 @@ const EmployeeDashboard = () => {
     { month: 'May', expenses: 180 },
   ]);
   const [recentTransactions, setRecentTransactions] = useState([ // Mock data
-    { id: 1, description: 'Lunch with client', amount: 50, date: '2025-03-25' },
-    { id: 2, description: 'Travel to conference', amount: 300, date: '2025-03-24' },
-    { id: 3, description: 'Office supplies', amount: 25, date: '2025-03-23' },
+    { id: 1, description: 'Lunch with client', amount: 5000, date: '2025-03-25' },
+    { id: 2, description: 'Travel to conference', amount: 3000, date: '2025-03-24' },
+    { id: 3, description: 'Office supplies', amount: 2500, date: '2025-03-23' },
   ]);
   const [loading, setLoading] = useState(false); // Set loading to false for mock data
   const [error, setError] = useState(null);
@@ -90,6 +90,13 @@ const EmployeeDashboard = () => {
 
   // Removed the useEffect hook that fetches data
 
+  const formatIndianRupee = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(amount);
+  };
+
   if (loading) {
     return (
       <Box display="flex">
@@ -123,13 +130,13 @@ const EmployeeDashboard = () => {
           <Grid container spacing={3}>
             {/* Top Row - Summary Cards */}
             <Grid item xs={12} md={3}>
-              <TotalExpensesCard totalExpenses={totalExpenses} />
+              <TotalExpensesCard totalExpenses={formatIndianRupee(totalExpenses)} />
             </Grid>
             <Grid item xs={12} md={3}>
-              <MonthlyBudgetCard monthlyBudget={monthlyBudget} />
+              <MonthlyBudgetCard monthlyBudget={formatIndianRupee(monthlyBudget)} />
             </Grid>
             <Grid item xs={12} md={3}>
-              <ApprovedHousingCard approvedHousing={approvedHousing} />
+              <ApprovedHousingCard approvedHousing={formatIndianRupee(approvedHousing)} />
             </Grid>
             <Grid item xs={12} md={3}>
               <PendingApprovalsCard pendingApprovalsCount={pendingApprovalsCount} />
@@ -137,12 +144,18 @@ const EmployeeDashboard = () => {
 
             {/* Middle Row - Expense Overview Chart */}
             <Grid item xs={12}>
-              <ExpenseOverviewCard expenseOverviewData={expenseOverviewData} />
+              <ExpenseOverviewCard expenseOverviewData={expenseOverviewData.map(item => ({
+                ...item,
+                expenses: formatIndianRupee(item.expenses),
+              }))} />
             </Grid>
 
             {/* Bottom Row - Recent Transactions */}
             <Grid item xs={12}>
-              <RecentTransactionsCard recentTransactions={recentTransactions} />
+              <RecentTransactionsCard recentTransactions={recentTransactions.map(item => ({
+                ...item,
+                amount: formatIndianRupee(item.amount),
+              }))} />
             </Grid>
           </Grid>
         </Container>

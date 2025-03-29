@@ -17,7 +17,7 @@ const Sidebar = () => {
   const userRole = auth.role; // EMPLOYEE or MANAGER
 
   const employeeMenuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
+    { text: "Dashboard", icon: <DashboardIcon />, path: "/employee-dashboard" },
     { text: "My Expenses", icon: <ReceiptIcon />, path: "/expenses" },
     { text: "Create Expense", icon: <AddCircleOutlineIcon />, path: "/create-expense" },
     { text: "Expense History", icon: <HistoryIcon />, path: "/expense-history" },
@@ -26,7 +26,7 @@ const Sidebar = () => {
   ];
 
   const managerMenuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
+    { text: "Dashboard", icon: <DashboardIcon />, path: "/manager-dashboard" },
     { text: "Expense Requests", icon: <ReceiptIcon />, path: "/expense-requests" },
     { text: "Team Members", icon: <PeopleIcon />, path: "/team" },
     { text: "Analytics", icon: <BarChartIcon />, path: "/analytics" },

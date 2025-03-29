@@ -6,9 +6,9 @@ const ApprovedHousingCard = ({ approvedHousing }) => {
     <Card>
       <CardContent>
         <Typography variant="h6">Approved</Typography>
-        <Typography variant="h5">Housing</Typography>
+        <Typography variant="h5">Bills</Typography>
         <Typography variant="body2" color="textSecondary">
-          ${approvedHousing ? approvedHousing.toFixed(2) : '0.00'} (32%)
+          {approvedHousing ? approvedHousing : '₹0.00'} (30%)
         </Typography>
       </CardContent>
     </Card>
