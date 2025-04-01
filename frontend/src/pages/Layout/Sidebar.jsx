@@ -14,7 +14,7 @@ import { useAuth } from "../../context/AuthContext";
 const Sidebar = () => {
   const navigate = useNavigate();
   const { auth, logout } = useAuth();
-  const userRole = "auth.role"; // EMPLOYEE or MANAGER
+  const userRole = auth.role; // EMPLOYEE or MANAGER
 
   const employeeMenuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/employee-dashboard" },
@@ -59,7 +59,7 @@ const Sidebar = () => {
       <List>
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding>
-            <ListItemButton 
+            <ListItemButton
               onClick={() => navigate(item.path)}
               sx={{
                 '&:hover': {
@@ -79,7 +79,7 @@ const Sidebar = () => {
       <Box sx={{ flexGrow: 1 }} />
       <List>
         <ListItem disablePadding>
-          <ListItemButton 
+          <ListItemButton
             onClick={logout}
             sx={{
               '&:hover': {
