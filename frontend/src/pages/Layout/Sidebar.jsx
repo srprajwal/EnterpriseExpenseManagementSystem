@@ -14,7 +14,7 @@ import { useAuth } from "../../context/AuthContext";
 const Sidebar = () => {
   const navigate = useNavigate();
   const { auth, logout } = useAuth();
-  const userRole = "user.role"; // EMPLOYEE or MANAGER
+  const userRole = "auth.role"; // EMPLOYEE or MANAGER
 
   const employeeMenuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/employee-dashboard" },
