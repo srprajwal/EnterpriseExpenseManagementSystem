@@ -6,7 +6,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import HistoryIcon from '@mui/icons-material/History';
+import RuleIcon from '@mui/icons-material/Rule';
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -14,27 +14,25 @@ import { useAuth } from "../../context/AuthContext";
 const Sidebar = () => {
   const navigate = useNavigate();
   const { auth, logout } = useAuth();
-  const userRole = auth.role; // EMPLOYEE or MANAGER
+  const userRole = "user.role"; // EMPLOYEE or MANAGER
 
   const employeeMenuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
-    { text: "My Expenses", icon: <ReceiptIcon />, path: "/expenses" },
+    { text: "Dashboard", icon: <DashboardIcon />, path: "/employee-dashboard" },
+    { text: "My Expenses", icon: <ReceiptIcon />, path: "/myexpense" },
     { text: "Create Expense", icon: <AddCircleOutlineIcon />, path: "/create-expense" },
-    { text: "Expense History", icon: <HistoryIcon />, path: "/expense-history" },
+    { text: "Approval Status", icon: <RuleIcon />, path: "/approvals" },
     { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
-
   ];
 
   const managerMenuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
+    { text: "Dashboard", icon: <DashboardIcon />, path: "/manager-dashboard" },
     { text: "Expense Requests", icon: <ReceiptIcon />, path: "/expense-requests" },
     { text: "Team Members", icon: <PeopleIcon />, path: "/team" },
     { text: "Analytics", icon: <BarChartIcon />, path: "/analytics" },
-    { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
+    { text: "Settings", icon: <SettingsIcon />, path: "/manager-settings" },
   ];
 
   const menuItems = userRole === "MANAGER" ? managerMenuItems : employeeMenuItems;
-
 
   return (
     <Drawer
@@ -42,8 +40,8 @@ const Sidebar = () => {
       sx={{
         width: 250,
         flexShrink: 0,
-        top: "64px", // Adjust based on your AppBar height
-        height: "calc(100% - 64px)", // Adjust height to fill remaining space
+        top: "64px",
+        height: "calc(100% - 64px)",
         display: "flex",
         flexDirection: "column",
         [`& .MuiDrawer-paper`]: {
@@ -53,29 +51,43 @@ const Sidebar = () => {
           height: "calc(100% - 64px)",
           display: "flex",
           flexDirection: "column",
+          backgroundColor: "#6a4f9c", // Match header color
+          color: "#fff", // White text for contrast
         },
       }}
     >
       <List>
-        {menuItems
-          .filter((item) => !item.roles || item.roles.includes(userRole))
-          .map((item) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton onClick={() => navigate(item.path)}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+        {menuItems.map((item) => (
+          <ListItem key={item.text} disablePadding>
+            <ListItemButton 
+              onClick={() => navigate(item.path)}
+              sx={{
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: '#fff' }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
       </List>
-      <Divider />
+      <Divider sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
 
       {/* Logout Button at the Bottom */}
       <Box sx={{ flexGrow: 1 }} />
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={logout}>
-            <ListItemIcon><LogoutIcon /></ListItemIcon>
+          <ListItemButton 
+            onClick={logout}
+            sx={{
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: '#fff' }}><LogoutIcon /></ListItemIcon>
             <ListItemText primary="Logout" />
           </ListItemButton>
         </ListItem>

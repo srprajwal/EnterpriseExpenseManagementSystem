@@ -16,30 +16,40 @@ const Header = ({ user }) => {
     setAnchorEl(null);
   };
 
+  const handleProfileClick = () => {
+    // user.role = "MANAGER"; //just for debugging
+    if (user.role === "MANAGER") {
+      navigate("/manager-profile");
+    } else {
+      navigate("/profile");
+    }
+    handleMenuClose();
+  };
+
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#967ebf" }}>
+    <AppBar position="fixed" sx={{ backgroundColor: "#6a4f9c", boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
       <Toolbar>
         {/* Logo & Website Name */}
-        <Typography variant="h6" sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
+        <Typography variant="h6" sx={{ flexGrow: 1, display: "flex", alignItems: "center", color: '#fff' }}>
           <img src={logo} alt="Logo" style={{ height: "40px", marginRight: "10px" }} />
           ExpensoPro
         </Typography>
 
         {/* Notification Icon */}
-        <IconButton color="inherit">
+        <IconButton color="inherit" sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
           <Badge badgeContent={4} color="error"> {/* Change "4" to dynamic count */}
             <NotificationsIcon />
           </Badge>
         </IconButton>
 
         {/* Profile Avatar */}
-        <IconButton onClick={handleMenuOpen} color="inherit">
+        <IconButton onClick={handleMenuOpen} color="inherit" sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
           <Avatar src={user?.profilePic || "/default-avatar.png"} />
         </IconButton>
 
-        {/* Profile Menu (Only Profile Option) */}
+        {/* Profile Menu */}
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-          <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
+          <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
